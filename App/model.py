@@ -88,15 +88,19 @@ def addStopConnection(analyzer, lastservice, service):
     Si la estacion sirve otra ruta, se tiene: 75009-101
     """
     try:
-        origin = formatVertex(lastservice)
-        destination = formatVertex(service)
+        origin = formatVertex(service)
+        destination = formatVertey(lastservice)
+        #print (origin,"  ", destination)
+        
         cleanServiceDistance(lastservice, service)
-        distance = float(service['tripduration']) - float(lastservice['tripduration'])
+        #distance = (float(service['tripduration'])  + float(lastservice['tripduration']))/2
+        distance = float(service['tripduration'])  
         addStop(analyzer, origin)
         addStop(analyzer, destination)
+        
         addConnection(analyzer, origin, destination, distance)
-        addRouteStop(analyzer, service)
-        addRouteStop(analyzer, lastservice)
+        #addRouteStop(analyzer, service)
+        #addRouteStop(analyzer, lastservice)
         return analyzer
     except Exception as exp:
         error.reraise(exp, 'model:addStopConnection')
@@ -109,6 +113,7 @@ def addStop(analyzer, stopid):
     try:
         if not gr.containsVertex(analyzer['connections'], stopid):
             gr.insertVertex(analyzer['connections'], stopid)
+            
         return analyzer
     except Exception as exp:
         error.reraise(exp, 'model:addstop')
@@ -162,10 +167,8 @@ def addConnection(analyzer, origin, destination, distance):
         gr.addEdge(analyzer['connections'], origin, destination, distance)
     else: #actualizacion del peso de los arcos
         e.updateAverageWeight (edge,distance)
-    
-    #else:
-    #    gr.updateAverageWeight (edge, distance)   
-    #    print ("Arco update " + str(origin) + "-->" + str(destination) + "count: " + str(edge['count']))
+        #Aqui imprimo la imforacion de los arcos y el contador
+        #print ("Arco update " + str(origin) + "-->" + str(destination) + "   count: " + str(edge['count']))
     return analyzer
 
 # ==============================
@@ -193,10 +196,23 @@ def connectedComponents(analyzer):
 
 def numSCC(analyzer):
     sc = scc.KosarajuSCC(analyzer['connections'])
+    print (sc['idscc'])
+    input ("Clic para continuar .....")
+    print ("Reverse: ", sc['marked']) 
+    input ("Clic para continuar .....")
+    print ("Componentes conectados: ", sc['components'])
+    input ("Clic para continuar .....")
+    """
+    print ("Reverse: ", scc.sccCount(sc))
+
+    input ("Clic para continuar .....")
+    """
     return scc.connectedComponents(sc)
 
 def connectedwithID(analyzer, id1,id2):
     sc = scc.KosarajuSCC(analyzer['connections'])
+    print (sc)
+    input ("clic este es SCC.....")
     return scc.stronglyConnected(sc, id1, id2)
 
 
@@ -283,8 +299,19 @@ def formatVertex(service):
     Se formatea el nombrer del vertice con el id de la estación
     seguido de la ruta.
     """
-    name = service['end station id'] + '-'
-    name = name + service['start station id']
+    #name = service['end station id'] + '-'
+    #name = name + service['start station id']
+    name = service['start station id']
+    return name
+
+def formatVertey(service):
+    """
+    Se formatea el nombrer del vertice con el id de la estación
+    seguido de la ruta.
+    """
+    #name = service['end station id'] + '-'
+    #name = name + service['start station id']
+    name = service['end station id']
     return name
 
 
