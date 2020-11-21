@@ -49,8 +49,17 @@ def updateAverageWeight(edge, weight):
     """
     Crea un nuevo arco entrelos vertices va y vb
     """
-    newweight = (edge['weight']*edge['count']+weight)/(edge['count']+1)
-    edge['weight']= newweight
+
+    # Carga los pesos de los arcos, y pasa los tempos de segundos a minutos.. 
+    
+    if  edge['count']==1:
+        newweight = weight
+        edge['weight']= newweight/60
+    else:    
+        newweight = (edge['weight']*edge['count']+(weight/60))/(edge['count']+1)
+        edge['weight']= round(newweight,0)
+        
+    #newweight = (edge['weight']*edge['count']+weight)/(edge['count']+1)
     edge['count']+=1
 
 def weight(edge):
