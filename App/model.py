@@ -196,8 +196,10 @@ def connectedComponents(analyzer):
 
 def numSCC(analyzer):
     sc = scc.KosarajuSCC(analyzer['connections'])
+    """
     print (sc['idscc'])
     input ("Clic para continuar .....")
+    """
     print ("Reverse: ", sc['marked']) 
     input ("Clic para continuar .....")
     print ("Componentes conectados: ", sc['components'])
@@ -211,11 +213,23 @@ def numSCC(analyzer):
 
 def connectedwithID(analyzer, id1,id2):
     sc = scc.KosarajuSCC(analyzer['connections'])
-    print (sc)
+    #print (scc.stronglyConnected  (sc,id1,id2))
+    #print (sc['idscc'])
+    #print (m.get(sc['idscc'],id1))
+    #print (m.get(sc['idscc'],id2))
+    #input ("idscc impreso")
+    #print (scc.stronglyConnected  (analyzer,id1,id2))
+
+
+    return scc.stronglyConnected  (sc,id1,id2)
+    
+
+def connectedwithID_1(analyzer, id1):
+    sc = scc.KosarajuSCC(analyzer['connections'],id1)
+    print (sc['idscc'])
+    #print (sc)
     input ("clic este es SCC.....")
-    return scc.stronglyConnected(sc, id1, id2)
-
-
+    return scc.stronglyConnected(sc)
 
 
 def minimumCostPaths(analyzer, initialStation):
@@ -325,6 +339,7 @@ def compareStopIds(stop, keyvaluestop):
     Compara dos estaciones
     """
     stopcode = keyvaluestop['key']
+    
     if (stop == stopcode):
         return 0
     elif (stop > stopcode):

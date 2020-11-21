@@ -145,6 +145,9 @@ def connectedComponents(analyzer):
 def connectedwithID(cont, id1,id2):
     return model.connectedwithID(cont, id1,id2)
 
+def connectedwithID_1(cont, id1):
+    return model.connectedwithID_1(cont, id1)
+
 def minimumCostPaths(analyzer, initialStation):
     """
     Calcula todos los caminos de costo minimo de initialStation a todas

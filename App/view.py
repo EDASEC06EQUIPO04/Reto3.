@@ -93,25 +93,32 @@ def optionTwo():
     #print (gr.numEdges(cont['connections']))
     #input ("Clic para continuar ......")
     # Aqui puedo imprimir el grafo con su informacion
-    #print (gr.edges(cont['connections']))
+    print (gr.edges(cont['connections']))
     
     
 
 
 def optionThree():
-    print('El número de componentes conectados es: ' + str(controller.connectedComponents(cont)))
-    id1=int(input("inserte ID1\n"))
-    id2=int(input("inserte ID2\n"))
+    sccA=controller.connectedComponents(cont)
+    #print('El número de componentes conectados es: ' + str(controller.connectedComponents(cont)))
+    print('El número de componentes conectados es: ' + str(sccA))
+    input ("El argorimo de Kosaraju esta funcionando, esto es el scc.py")
+    
+    id1=input("inserte ID1: " )
+    id2=input("inserte ID2: ")
     #TESTED WITH 
-    #146
-    #168
-    #print (controller.connectedwithID(cont,id1,id2))
+    #72 y 127, True
+    #72 y 270
+    scc2=(controller.connectedwithID(cont,id1,id2))
+    print ("Estan ", id1, " y " , id2 , "fuertemente conectados: " , scc2) 
+    input ("clic para continuar")
 
 
 
 def optionFour():
     #controller.minimumCostPaths(cont, initialStation)
-    controller.connectedComponents(cont)
+    #controller.connectedwithID_1(cont,initialStation)
+    controller.connectedwithID_1(cont,72)
     
 
 def optionFive():
