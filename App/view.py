@@ -25,6 +25,7 @@
  """
 
 
+
 import sys
 import config
 from App import controller
@@ -33,6 +34,11 @@ import timeit
 assert config
 from DISClib.Algorithms.Graphs import scc
 from DISClib.ADT.graph import gr
+from DISClib.DataStructures import listiterator as it
+from DISClib.ADT import list as lt
+from DISClib.ADT import map as m
+from DISClib.Algorithms.Graphs import dfs
+from DISClib.DataStructures import edge as e
 
 """
 La vista se encarga de la interacción con el usuario.
@@ -88,12 +94,12 @@ def optionTwo():
     print('El limite de recursion actual: ' + str(sys.getrecursionlimit()))
     sys.setrecursionlimit(recursionLimit)
     print('El limite de recursion se ajusta a: ' + str(recursionLimit))
-    input ("Clic para continuar ......")
     # Aqui puedo imprimir el numero de arcos
     #print (gr.numEdges(cont['connections']))
-    #input ("Clic para continuar ......")
+    input ("Clic para como quedo cargado el Grafo .... continuar ......")
     # Aqui puedo imprimir el grafo con su informacion
     print (gr.edges(cont['connections']))
+
     
     
 
@@ -104,8 +110,8 @@ def optionThree():
     print('El número de componentes conectados es: ' + str(sccA))
     input ("El argorimo de Kosaraju esta funcionando, esto es el scc.py")
     
-    id1=input("inserte ID1: " )
-    id2=input("inserte ID2: ")
+    id1=input("Inserte Station ID_1: " )
+    id2=input("Inserte Station ID_2: ")
     #TESTED WITH 
     #72 y 127, True
     #72 y 270
@@ -116,9 +122,76 @@ def optionThree():
 
 
 def optionFour():
+    tiempoDisponible=int(input(" Cuanto minutos tienes disponible para la visita? " ))
+    initialStation=input("Inserte el punto de partida Station ID, Ejemplo 72: " )
     #controller.minimumCostPaths(cont, initialStation)
-    #controller.connectedwithID_1(cont,initialStation)
-    controller.connectedwithID_1(cont,72)
+    scc3=controller.connectedwithID_1(cont,initialStation)
+    contador=0
+    #print (scc3['idscc'])
+    #ltset = lt.newList()
+    #lista= lt.newList('SINGLE_LINKED', omap['cmpfunction'])
+    lista= lt.newList()
+    lista=scc3['reversePost']
+    print (lista)
+
+    #verStack=lt.getElement(lista,1)
+    verStack=lista[1]
+    print (verStack)
+    input ("clic")
+ 
+    print ("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+    print("")
+    #print (dfs.DepthFirstSearch(cont['connections'], verStack))  
+    print (dfs.DepthFirstSearch(cont['connections'], verStack))  
+    print("")
+    print ("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+    print("")
+    #lista=m.valueSet (scc3['idscc'])
+    #for i in range  (0,lt.size(lista)):
+    #    print (lt.getElement(lista,i))
+    #print ("\n", m.valueSet (scc3['idscc']))
+    print ("")
+    
+    input (" Acabo de imprimir el DFS sobre vertice del ReversePost Stack clic para continuar ...")
+    verStack=verStack
+
+    #print ("El nodo ", verStack, " tiene un peso de weight:  ", e.weight (72))
+    
+    
+   
+    input ("Estoy recuperando el peso de los arcos.....")
+
+    # Ya con los pesos, los tengo que acumular, y luego lo comparo con el tiempo que tiene el turitas para visitar
+    """
+    print (scc3['marked'])
+    input ("clic para continuar  market ...")
+    print (scc3['grmarked'])
+    input ("clic para continuar  grmarket ...")
+    print (scc3['components'])
+    """
+    #input ("clic para continuar  Components ...")
+
+    #while contador < tiempoDisponible:
+    #AdjConectados=gr.adjacentEdges(cont['connections'], initialStation)
+    #print ("El tamano de la lista de adyacecias es: ", lt.size(AdjConectados))
+    #print  (map.keySet (AdjConectados))  
+
+
+    
+    """
+    #adjIterator = it.newIterator(AdjConectados)
+    pos=0
+    
+    while it.hasNext (adjIterator):
+        adjVert=it.next(adjIterator)
+
+        #print (lt.getElement(AdjConectados,pos))
+        print (" ", pos)
+        pos=pos +1 
+    """    
+#    print (AdjConectados)        
+    input ("clic para continuar")
+    
     
 
 def optionFive():
@@ -163,8 +236,8 @@ while True:
         print("Tiempo de ejecución: " + str(executiontime))
 
     elif int(inputs) == 4:
-        msg = "Estación Base (Ej: 72): "
-        initialStation = input(msg)
+        #msg = "Estación Base (Ej: 72): "
+        #initialStation = input(msg)
         executiontime = timeit.timeit(optionFour, number=1)
         print("Tiempo de ejecución: " + str(executiontime))
 

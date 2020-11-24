@@ -97,7 +97,7 @@ def addStopConnection(analyzer, lastservice, service):
         distance = float(service['tripduration'])  
         addStop(analyzer, origin)
         addStop(analyzer, destination)
-        
+        #if e.compareedges(str(origin), str(destination))!=True:
         addConnection(analyzer, origin, destination, distance)
         #addRouteStop(analyzer, service)
         #addRouteStop(analyzer, lastservice)
@@ -166,7 +166,13 @@ def addConnection(analyzer, origin, destination, distance):
     if edge is None:
         gr.addEdge(analyzer['connections'], origin, destination, distance)
     else: #actualizacion del peso de los arcos
-        e.updateAverageWeight (edge,distance)
+        # Quiero poner el condicional siguiente para  que me cargue solo los que nos sean iguales..
+        if origin == destination:
+            #print("-------- " ,origin, " --> " , destination, ", Nodos iguales")
+            pass
+        else:
+            #print("@@@@@@@@ " , origin, " --> " , destination, ", cargando info..")
+            e.updateAverageWeight (edge,distance)
         #Aqui imprimo la imforacion de los arcos y el contador
         #print ("Arco update " + str(origin) + "-->" + str(destination) + "   count: " + str(edge['count']))
     return analyzer
@@ -225,11 +231,12 @@ def connectedwithID(analyzer, id1,id2):
     
 
 def connectedwithID_1(analyzer, id1):
-    sc = scc.KosarajuSCC(analyzer['connections'],id1)
-    print (sc['idscc'])
+    sc = scc.KosarajuSCC(analyzer['connections'])
+    #print (sc['idscc'])
     #print (sc)
-    input ("clic este es SCC.....")
-    return scc.stronglyConnected(sc)
+    #input ("clic este es SCC.....")
+    return sc
+    
 
 
 def minimumCostPaths(analyzer, initialStation):
