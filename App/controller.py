@@ -58,12 +58,11 @@ def init():
 # ___________________________________________________
 
 
-def loadServices(analyzer):
+def loadServices(analyzer,servicesfile, aux):
     """
     Carga los datos de los archivos CSV en el modelo.
     Se crea un arco entre cada par de estaciones que
     pertenecen al mismo servicio y van en el mismo sentido.
-
     addRouteConnection crea conexiones entre diferentes rutas
     servidas en una misma estación.
     """
@@ -72,7 +71,7 @@ def loadServices(analyzer):
     for filename in os.listdir(cf.data_dir):
         if filename.endswith('.csv'):
             print('Cargando archivo: ' + filename)
-            loadFile(analyzer, filename)
+            loadFile(analyzer, filename, aux)
 
 
     #input_file = csv.DictReader(open(servicesfile, encoding="utf-8"), delimiter=",")
@@ -81,20 +80,40 @@ def loadServices(analyzer):
     return analyzer
 
 
-def loadFile(analyzer, tripfile):
+def loadFile(analyzer, tripfile, aux):
     """
     """
     tripfile = cf.data_dir + tripfile
     input_file = csv.DictReader(open(tripfile, encoding="utf-8"),
                                 delimiter=",")
     lastservice = None
+    i=0
     for service in input_file:
+
+        
         if lastservice is not None:
+            """ 
             sameservice = lastservice['start station id'] == service['start station id'] 
             samedirection = lastservice['end station id'] == service['end station id']
             if sameservice and samedirection:
                 model.addStopConnection(analyzer, lastservice, service)
+                i+=1
+                print (i)
+            """
+            sameservice = lastservice['start station id'] == service['start station id'] 
+            samedirection = lastservice['end station id'] == service['end station id']
+
+
+            model.addStopConnection(analyzer, lastservice, service, aux)      
         lastservice = service
+
+
+
+    #print (analyzer['connections']) 
+        #origen = service['start station id'] 
+        #destino = service['end station id']       
+        #model.addStopConnection(analyzer, origen , destino)
+
     model.addRouteConnections(analyzer)
     return analyzer
 
@@ -129,6 +148,9 @@ def connectedComponents(analyzer):
 
 def connectedwithID(cont, id1,id2):
     return model.connectedwithID(cont, id1,id2)
+
+def connectedwithID_1(cont, id1):
+    return model.connectedwithID_1(cont, id1)
 
 def minimumCostPaths(analyzer, initialStation):
     """

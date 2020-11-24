@@ -45,7 +45,6 @@ de creacion y consulta sobre las estructuras de datos.
 
 def newAnalyzer():
     """ Inicializa el analizador
-
    stops: Tabla de hash para guardar los vertices del grafo
    connections: Grafo para representar las rutas entre estaciones
    components: Almacena la informacion de los componentes conectados
@@ -75,28 +74,43 @@ def newAnalyzer():
 
 # Funciones para agregar informacion al grafo
 
-def addStopConnection(analyzer, lastservice, service):
+def addStopConnection(analyzer, lastservice, service, aux):
     """
     Adiciona las estaciones al grafo como vertices y arcos entre las
     estaciones adyacentes.
-
     Los vertices tienen por nombre el identificador de la estacion
     seguido de la ruta que sirve.  Por ejemplo:
-
     75009-10
-
     Si la estacion sirve otra ruta, se tiene: 75009-101
     """
     try:
-        origin = formatVertex(lastservice)
-        destination = formatVertex(service)
+        origin = formatVertex(service)
+        destination = formatVertey(lastservice)
+        #print (origin,"  ", destination)
+        
         cleanServiceDistance(lastservice, service)
-        distance = float(service['tripduration']) - float(lastservice['tripduration'])
+        #distance = (float(service['tripduration'])  + float(lastservice['tripduration']))/2
+        distance = float(service['tripduration'])  
         addStop(analyzer, origin)
         addStop(analyzer, destination)
+        #if e.compareedges(str(origin), str(destination))!=True:
         addConnection(analyzer, origin, destination, distance)
-        addRouteStop(analyzer, service)
-        addRouteStop(analyzer, lastservice)
+        #addRouteStop(analyzer, service)
+        #addRouteStop(analyzer, lastservice)
+
+        if origin not in aux:
+            aux[origin]=[1,0,1]
+        else:
+            aux[origin][0]+=1
+            aux[origin][2]+=1
+        
+        if destination not in aux:
+            aux[destination]=[0,1,1]
+
+        else:
+            aux[destination][1]+=1
+            aux[destination][2]+=1
+
         return analyzer
     except Exception as exp:
         error.reraise(exp, 'model:addStopConnection')
@@ -109,6 +123,7 @@ def addStop(analyzer, stopid):
     try:
         if not gr.containsVertex(analyzer['connections'], stopid):
             gr.insertVertex(analyzer['connections'], stopid)
+            
         return analyzer
     except Exception as exp:
         error.reraise(exp, 'model:addstop')
@@ -161,11 +176,15 @@ def addConnection(analyzer, origin, destination, distance):
     if edge is None:
         gr.addEdge(analyzer['connections'], origin, destination, distance)
     else: #actualizacion del peso de los arcos
-        e.updateAverageWeight (edge,distance)
-    
-    #else:
-    #    gr.updateAverageWeight (edge, distance)   
-    #    print ("Arco update " + str(origin) + "-->" + str(destination) + "count: " + str(edge['count']))
+        # Quiero poner el condicional siguiente para  que me cargue solo los que nos sean iguales..
+        if origin == destination:
+            #print("-------- " ,origin, " --> " , destination, ", Nodos iguales")
+            pass
+        else:
+            #print("@@@@@@@@ " , origin, " --> " , destination, ", cargando info..")
+            e.updateAverageWeight (edge,distance)
+        #Aqui imprimo la imforacion de los arcos y el contador
+        #print ("Arco update " + str(origin) + "-->" + str(destination) + "   count: " + str(edge['count']))
     return analyzer
 
 # ==============================
@@ -193,13 +212,40 @@ def connectedComponents(analyzer):
 
 def numSCC(analyzer):
     sc = scc.KosarajuSCC(analyzer['connections'])
+    """
+    print (sc['idscc'])
+    input ("Clic para continuar .....")
+    """
+    print ("Reverse: ", sc['marked']) 
+    input ("Clic para continuar .....")
+    print ("Componentes conectados: ", sc['components'])
+    input ("Clic para continuar .....")
+    """
+    print ("Reverse: ", scc.sccCount(sc))
+    input ("Clic para continuar .....")
+    """
     return scc.connectedComponents(sc)
 
 def connectedwithID(analyzer, id1,id2):
     sc = scc.KosarajuSCC(analyzer['connections'])
-    return scc.stronglyConnected(sc, id1, id2)
+    #print (scc.stronglyConnected  (sc,id1,id2))
+    #print (sc['idscc'])
+    #print (m.get(sc['idscc'],id1))
+    #print (m.get(sc['idscc'],id2))
+    #input ("idscc impreso")
+    #print (scc.stronglyConnected  (analyzer,id1,id2))
 
 
+    return scc.stronglyConnected  (sc,id1,id2)
+    
+
+def connectedwithID_1(analyzer, id1):
+    sc = scc.KosarajuSCC(analyzer['connections'])
+    #print (sc['idscc'])
+    #print (sc)
+    #input ("clic este es SCC.....")
+    return sc
+    
 
 
 def minimumCostPaths(analyzer, initialStation):
@@ -283,8 +329,19 @@ def formatVertex(service):
     Se formatea el nombrer del vertice con el id de la estación
     seguido de la ruta.
     """
-    name = service['end station id'] + '-'
-    name = name + service['start station id']
+    #name = service['end station id'] + '-'
+    #name = name + service['start station id']
+    name = service['start station id']
+    return name
+
+def formatVertey(service):
+    """
+    Se formatea el nombrer del vertice con el id de la estación
+    seguido de la ruta.
+    """
+    #name = service['end station id'] + '-'
+    #name = name + service['start station id']
+    name = service['end station id']
     return name
 
 
@@ -298,6 +355,7 @@ def compareStopIds(stop, keyvaluestop):
     Compara dos estaciones
     """
     stopcode = keyvaluestop['key']
+    
     if (stop == stopcode):
         return 0
     elif (stop > stopcode):
