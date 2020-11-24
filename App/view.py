@@ -286,14 +286,15 @@ def optionFive():
             menores[2]=aux[x][2]
             id_menores[2]= x
 
-    print(id_mayores_salida)
-    print(mayores_salida)
+    
 
-    print(id_mayores_llegada)
-    print(mayores_llegada)
+    print("El Id del top de estaciones de salida (consecutivamente) son: ", id_mayores_salida, ", Los respectivos valores de cada uno (consecutivamente) son: ", mayores_salida)
 
-    print(id_menores)
-    print(menores)
+    print("El Id del top de estaciones de llegada (consecutivamente) son: ", id_mayores_llegada, ", Los respectivos valores de cada uno (consecutivamente) son: ", mayores_llegada)
+  
+    print("El Id del top de estaciones menos utilizadas (consecutivamente) son: ", id_menores, ", Los respectivos valores de cada uno (consecutivamente) son: ", menores)
+
+
     
 
 def optionSix():
