@@ -58,7 +58,7 @@ def init():
 # ___________________________________________________
 
 
-def loadServices(analyzer,servicesfile, aux, edades):
+def loadServices(analyzer,servicesfile, aux):
     """
     Carga los datos de los archivos CSV en el modelo.
     Se crea un arco entre cada par de estaciones que
@@ -80,7 +80,47 @@ def loadServices(analyzer,servicesfile, aux, edades):
     return analyzer
 
 
-def loadFile(analyzer, tripfile, aux, dic_edades):
+def loadFile(analyzer, tripfile, aux):
+    
+    tripfile = cf.data_dir + tripfile
+    input_file = csv.DictReader(open(tripfile, encoding="utf-8"),
+                                delimiter=",")
+    lastservice = None
+    for service in input_file:
+
+        
+        if lastservice is not None:
+            """ 
+            sameservice = lastservice['start station id'] == service['start station id'] 
+            samedirection = lastservice['end station id'] == service['end station id']
+            if sameservice and samedirection:
+                model.addStopConnection(analyzer, lastservice, service)
+                i+=1
+                print (i)
+            """
+            sameservice = lastservice['start station id'] == service['start station id'] 
+            samedirection = lastservice['end station id'] == service['end station id']
+
+            
+            model.addStopConnection(analyzer, lastservice, service, aux)      
+        lastservice = service
+
+    model.addRouteConnections(analyzer)
+    return analyzer
+
+
+
+def loadServices_REQ5(analyzer,servicesfile, aux, edades):
+
+    for filename in os.listdir(cf.data_dir):
+        if filename.endswith('.csv'):
+            print('Cargando archivo: ' + filename)
+            loadFile_REQ5(analyzer, filename, aux, edades)
+
+    return analyzer
+
+
+def loadFile_REQ5(analyzer, tripfile, aux, dic_edades):
     
     tripfile = cf.data_dir + tripfile
     input_file = csv.DictReader(open(tripfile, encoding="utf-8"),
@@ -102,17 +142,22 @@ def loadFile(analyzer, tripfile, aux, dic_edades):
             samedirection = lastservice['end station id'] == service['end station id']
 
             edad= 2020-int(service["birth year"])
-            model.addStopConnection(analyzer, lastservice, service, aux, dic_edades, edad)      
+            model.addStopConnection_REQ5(analyzer, lastservice, service, aux, dic_edades, edad)      
         lastservice = service
-
-
-    #print (analyzer['connections']) 
-        #origen = service['start station id'] 
-        #destino = service['end station id']       
-        #model.addStopConnection(analyzer, origen , destino)
-
+        
     model.addRouteConnections(analyzer)
     return analyzer
+
+
+
+
+
+
+
+
+
+
+
 
 
 
