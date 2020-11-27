@@ -24,6 +24,7 @@
  *
  """
 
+from DISClib.ADT.list import size
 import config
 from DISClib.DataStructures import listiterator as it
 from DISClib.ADT import graph as g
@@ -31,6 +32,7 @@ from DISClib.ADT import stack
 from DISClib.Algorithms.Graphs import dfo
 from DISClib.Utils import error as error
 from DISClib.ADT import map
+from DISClib.ADT import list as lt
 assert config
 
 
@@ -52,7 +54,8 @@ def KosarajuSCC(graph):
                 'idscc': None,
                 'marked': None,
                 'grmarked': None,
-                'components': 0
+                'components': 0,
+                'reversePost':None
             }
 
         scc['idscc'] = map.newMap(g.numVertices(graph),
@@ -73,14 +76,30 @@ def KosarajuSCC(graph):
         # Se calcula el DFO del reverso de graph
         dforeverse = dfo.DepthFirstOrder(greverse)
         grevrevpost = dforeverse['reversepost']
+        scc['reversePost']=grevrevpost
+
 
         # Se recorre el grafo en el orden dado por reversepost (G-reverso)
+        print  (stack.size(grevrevpost))
+        catEstaciones=stack.size(grevrevpost)
+        print  (grevrevpost)
+        for i in range (0,catEstaciones,1):
+            print (lt.getElement(grevrevpost,i))
+            scc['reversePost'][i]= lt.getElement(grevrevpost,i)
+        print ("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+        input("Tamano del stack par recorrerlo, impreso desde SCC.PY")
+        print ("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+
+        
         scc['components'] = 0
         while (not stack.isEmpty(grevrevpost)):
             vert = stack.pop(grevrevpost)
+            #print (vert)
             if not map.contains(scc['marked'], vert):
                 scc['components'] += 1
                 sccCount(graph, scc, vert)
+        #print (stack.size(grevrevpost))
+        #input("Aqui estamos")
         return scc
     except Exception as exp:
         error.reraise(exp, 'scc:Kosaraju')
