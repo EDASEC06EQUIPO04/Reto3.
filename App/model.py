@@ -74,7 +74,7 @@ def newAnalyzer():
 
 # Funciones para agregar informacion al grafo
 
-def addStopConnection(analyzer, lastservice, service, aux, dic_edades, edad):
+def addStopConnection(analyzer, lastservice, service, aux):
     """
     Adiciona las estaciones al grafo como vertices y arcos entre las
     estaciones adyacentes.

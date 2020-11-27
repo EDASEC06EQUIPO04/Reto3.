@@ -389,14 +389,14 @@ def optionSeven():
     print("La estacion en donde las personas de su rango de edad inician mas viajes es: ", inicial)
     print("La estacion en donde las personas de su rango de edad terminan mas viajes es: ", final)
 
-    """
+    
 
     camino=controller.minimumCostPaths(cont, inicial)
-    print(camino)
     camino_final=controller.minimumCostPath(camino, final)
+    print("El camino mas rapido entre la estacion ", inicial,"Y la estacion ", final, "es: ")
     print(camino_final)
-
-    """
+    
+    
 
 def optionEight():
     pass
