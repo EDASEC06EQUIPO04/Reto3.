@@ -374,7 +374,7 @@ def optionSeven():
 
     for id_est in r_final:
 
-        if r_inicio[id_est] > j:
+        if r_final[id_est] > j:
             final=id_est
             j=r_final[id_est]
 
