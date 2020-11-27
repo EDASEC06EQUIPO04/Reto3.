@@ -247,6 +247,8 @@ def connectedComponents(analyzer):
 
 
 
+
+
 def numSCC(analyzer):
     sc = scc.KosarajuSCC(analyzer['connections'])
     """

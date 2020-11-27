@@ -299,8 +299,12 @@ def optionSix():
 def optionSeven():
 
     controller.loadServices_REQ5(cont,servicefile,aux, edades)
-    """
+    
     #establecer_rango_de_edad:
+
+    edad_min=None
+    edad_max=None
+
 
     print("\n")
     print("****************************************************")
@@ -316,35 +320,38 @@ def optionSeven():
 
     rango_edad=input("escriba su respuesta: ")
 
-    if rango_edad == 1:
+    if rango_edad == "1":
         edad_min=0
         edad_max=10
 
-    elif rango_edad == 2:
+    elif rango_edad == "2":
         edad_min=11
         edad_max=20
 
-    elif rango_edad == 3:
+    elif rango_edad == "3":
         edad_min=21
         edad_max=30
 
-    elif rango_edad == 4:
+    elif rango_edad == "4":
         edad_min=31
         edad_max=40
 
-    elif rango_edad == 5:
+    elif rango_edad == "5":
         edad_min=41
         edad_max=50
 
-    elif rango_edad == 6:
+    elif rango_edad == "6":
         edad_min=51
         edad_max=60
 
-    elif rango_edad == 7:
+    elif rango_edad == "7":
         edad_min=61
         edad_max=135
-    """ 
     
+
+    #Desarrollo del requerimiento
+
+
     r_inicio={}
     r_final={}
     
@@ -357,7 +364,7 @@ def optionSeven():
     for estacion in edades:
         y=0
         z=0
-        for x in range(40,70):
+        for x in range(edad_min,edad_max):
 
             y += edades[estacion][0][x]
             z += edades[estacion][1][x]  
@@ -381,6 +388,15 @@ def optionSeven():
     
     print("La estacion en donde las personas de su rango de edad inician mas viajes es: ", inicial)
     print("La estacion en donde las personas de su rango de edad terminan mas viajes es: ", final)
+
+    """
+
+    camino=controller.minimumCostPaths(cont, inicial)
+    print(camino)
+    camino_final=controller.minimumCostPath(camino, final)
+    print(camino_final)
+
+    """
 
 def optionEight():
     pass

@@ -71,7 +71,7 @@ def loadServices(analyzer,servicesfile, aux):
     for filename in os.listdir(cf.data_dir):
         if filename.endswith('.csv'):
             print('Cargando archivo: ' + filename)
-            loadFile(analyzer, filename, aux, edades)
+            loadFile(analyzer, filename, aux)
 
 
     #input_file = csv.DictReader(open(servicesfile, encoding="utf-8"), delimiter=",")
