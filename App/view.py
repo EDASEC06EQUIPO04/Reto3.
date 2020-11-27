@@ -84,7 +84,7 @@ def printMenu():
 
 def optionTwo():
     print("\nCargando información ....")
-    controller.loadServices(cont,servicefile,aux)
+    controller.loadServices(cont,servicefile,aux, edades)
 
 
 
@@ -293,7 +293,17 @@ def optionFive():
     
 
 def optionSix():
-    pass
+    
+    r=[]
+    total_esta=0
+    for estacion in edades:
+        total_esta += 1
+        y=0
+        for x in range(20,70):
+            y+=edades[estacion][0][x]
+            
+        r.append(y)
+    print(r)
 
 
 def optionSeven():
@@ -322,6 +332,7 @@ while True:
         # cont es el controlador que se usará de acá en adelante
         cont = controller.init()
         aux={}
+        edades={}
 
     elif int(inputs) == 2:
         executiontime = timeit.timeit(optionTwo, number=1)
@@ -342,7 +353,6 @@ while True:
         print("Tiempo de ejecución: " + str(executiontime))
 
     elif int(inputs) == 6:
-        destStation = input("Estación destino (Ej: 15151-10): ")
         executiontime = timeit.timeit(optionSix, number=1)
         print("Tiempo de ejecución: " + str(executiontime))
 

@@ -58,7 +58,7 @@ def init():
 # ___________________________________________________
 
 
-def loadServices(analyzer,servicesfile, aux):
+def loadServices(analyzer,servicesfile, aux, edades):
     """
     Carga los datos de los archivos CSV en el modelo.
     Se crea un arco entre cada par de estaciones que
@@ -71,7 +71,7 @@ def loadServices(analyzer,servicesfile, aux):
     for filename in os.listdir(cf.data_dir):
         if filename.endswith('.csv'):
             print('Cargando archivo: ' + filename)
-            loadFile(analyzer, filename, aux)
+            loadFile(analyzer, filename, aux, edades)
 
 
     #input_file = csv.DictReader(open(servicesfile, encoding="utf-8"), delimiter=",")
@@ -80,14 +80,12 @@ def loadServices(analyzer,servicesfile, aux):
     return analyzer
 
 
-def loadFile(analyzer, tripfile, aux):
-    """
-    """
+def loadFile(analyzer, tripfile, aux, dic_edades):
+    
     tripfile = cf.data_dir + tripfile
     input_file = csv.DictReader(open(tripfile, encoding="utf-8"),
                                 delimiter=",")
     lastservice = None
-    i=0
     for service in input_file:
 
         
@@ -103,10 +101,9 @@ def loadFile(analyzer, tripfile, aux):
             sameservice = lastservice['start station id'] == service['start station id'] 
             samedirection = lastservice['end station id'] == service['end station id']
 
-
-            model.addStopConnection(analyzer, lastservice, service, aux)      
+            edad= 2020-int(service["birth year"])
+            model.addStopConnection(analyzer, lastservice, service, aux, dic_edades, edad)      
         lastservice = service
-
 
 
     #print (analyzer['connections']) 
