@@ -96,9 +96,10 @@ def optionTwo():
     print('El limite de recursion se ajusta a: ' + str(recursionLimit))
     # Aqui puedo imprimir el numero de arcos
     #print (gr.numEdges(cont['connections']))
-    input ("Clic para como quedo cargado el Grafo .... continuar ......")
+    #input ("Clic para como quedo cargado el Grafo .... continuar ......")
     # Aqui puedo imprimir el grafo con su informacion
-    print (gr.edges(cont['connections']))
+
+    #print (gr.edges(cont['connections']))
 
     
     
@@ -119,79 +120,173 @@ def optionThree():
     print ("Estan ", id1, " y " , id2 , "fuertemente conectados: " , scc2) 
     input ("clic para continuar")
 
+def stationRecursive (analyzer,stationc,time):
+    print (stationc)
+    input ("clic vertice que llegar parar a buscar adjacentes.......")
+    station=str(stationc)
+    time_u=time
+    values=gr.adjacentEdges (analyzer,station)
+    print (values)
+    input ("estoy imprimiendo los adyacentes del vertice")
 
+    return time_u
 
 def optionFour():
     tiempoDisponible=int(input(" Cuanto minutos tienes disponible para la visita? " ))
-    initialStation=input("Inserte el punto de partida Station ID, Ejemplo 72: " )
+    initialStation=input("Inserte el punto de partida Station ID, Ejemplo 72, 79, 82, 83, 119, 120: " )
     #controller.minimumCostPaths(cont, initialStation)
     scc3=controller.connectedwithID_1(cont,initialStation)
     contador=0
-    #print (scc3['idscc'])
-    #ltset = lt.newList()
-    #lista= lt.newList('SINGLE_LINKED', omap['cmpfunction'])
-    lista= lt.newList()
-    lista=scc3['reversePost']
-    print (lista)
+    listaReverse= lt.newList()
+    listaReverse=scc3['reversePost']
+    print (listaReverse)
+    input ("&&&&&&&&&&&&&&&&&& Clic para correr DFS   sobre modos del Stack Reverse    &&&&&&&&&&&&&&&&&&")
+    dfsAns=dfs.DepthFirstSearch(cont['connections'], initialStation)
+    
+    #print (dfsAns)
 
-    #verStack=lt.getElement(lista,1)
-    verStack=lista[1]
-    print (verStack)
-    input ("clic")
- 
-    print ("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
-    print("")
-    #print (dfs.DepthFirstSearch(cont['connections'], verStack))  
-    print (dfs.DepthFirstSearch(cont['connections'], verStack))  
-    print("")
-    print ("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
-    print("")
-    #lista=m.valueSet (scc3['idscc'])
-    #for i in range  (0,lt.size(lista)):
-    #    print (lt.getElement(lista,i))
-    #print ("\n", m.valueSet (scc3['idscc']))
-    print ("")
-    
-    input (" Acabo de imprimir el DFS sobre vertice del ReversePost Stack clic para continuar ...")
-    verStack=verStack
-
-    #print ("El nodo ", verStack, " tiene un peso de weight:  ", e.weight (72))
-    
-    
+    j=0
+    listaDSF= lt.newList()
+    """
+    for i in element:
+        if element['value']['marked']==True:
+            listaDSF[j]=element['value']['edgeTo']
+            j=j+1
+    for i in listaDSF:
+        print (listaDSF[i])
+    """
    
-    input ("Estoy recuperando el peso de los arcos.....")
-
-    # Ya con los pesos, los tengo que acumular, y luego lo comparo con el tiempo que tiene el turitas para visitar
-    """
-    print (scc3['marked'])
-    input ("clic para continuar  market ...")
-    print (scc3['grmarked'])
-    input ("clic para continuar  grmarket ...")
-    print (scc3['components'])
-    """
-    #input ("clic para continuar  Components ...")
-
-    #while contador < tiempoDisponible:
-    #AdjConectados=gr.adjacentEdges(cont['connections'], initialStation)
-    #print ("El tamano de la lista de adyacecias es: ", lt.size(AdjConectados))
-    #print  (map.keySet (AdjConectados))  
-
-
+    print ("********************************** Voy a imprimir el Path uno ****************************************")
+    print ("")
+    #tam=lt.size(listaReverse)
+    tam=len(listaReverse)
+    verX=listaReverse[tam-6]
+    verY=listaReverse[0]
+    #print ("tamano del stack:" , tam, " verx a buscar: ", verX)
+    dfsAnsPathVerX=dfs.pathTo(dfsAns, verX)
+    print (dfsAnsPathVerX)    
+    print (" ")
+    print ("Acabo de imprimir el path desde ", verX, " a ",  initialStation)
+    print (" ")
+    print ("********************************** Voy a imprimir el Path dos ****************************************")
+    print (" ")
+    dfsAnsPathVerY=dfs.pathTo(dfsAns, verY)
+    print (dfsAnsPathVerY)    
+    print (" ")
+    print ("Acabo de imprimir el path desde ", verY, " a ",  initialStation)
+   
+    input ("Clic para encontrar las rutas circuales")
+    stackTam=stack.size(dfsAnsPathVerX)
+    #print ("Tamano dle stack: ", stackTam)
+    #input("clic para cotinuar")
+    ruta1=lt.newList()
+ 
+    for i in range (0,stackTam):
+        punto=stack.pop(dfsAnsPathVerX)
+       # print (punto)
+        ruta1[i]=punto
     
-    """
-    #adjIterator = it.newIterator(AdjConectados)
+    tiempoRuta1=0   
+    #print ("Punto 1: ", ruta1[0], " y Punto 2: ", ruta1[1])
+    #print (stackTam)
+    print("")
+    print ("Ruta lineal")
+    print("")
+    for i in range (0,stackTam-1):
+        nodo = gr.getEdge(cont['connections'], ruta1[i], ruta1[i+1])
+        tiempoRuta1= tiempoRuta1+ nodo['weight'] +10
+        print ("Sale de: ", ruta1[i], " a ", ruta1[i+1], " tiempo de recorrido incluye visita: ", round(tiempoRuta1,0))
+
+    print("")
+    print ("Ruta Circular")
+    print("")
+    tiempoRuta1=0
     pos=0
-    
-    while it.hasNext (adjIterator):
-        adjVert=it.next(adjIterator)
+    peso=0
+    i=0
+    j=0
+    for i in range (0,stackTam-1):
+        if  (tiempoRuta1<=(tiempoDisponible/3)):
+            nodo = gr.getEdge(cont['connections'], ruta1[i], ruta1[i+1])
+            tiempoRuta1= tiempoRuta1+ nodo['weight'] +10
+            peso=nodo['weight']
+            print ("Sale de: ", ruta1[i], " a ", ruta1[i+1], " tiempo de recorrido incluye visita: ", round(tiempoRuta1,0))
+            pos=i
+            #print ("i: ",i, " pos: ", pos)
+        else:    
+            i=stackTam-1
 
-        #print (lt.getElement(AdjConectados,pos))
-        print (" ", pos)
-        pos=pos +1 
-    """    
-#    print (AdjConectados)        
-    input ("clic para continuar")
-    
+    #print ("Posicion: ", pos)
+    #nodo = gr.getEdge(cont['connections'], ruta1[pos+1], ruta1[pos])
+    tiempoRuta1= tiempoRuta1+ peso +10
+    print ("Sale de: ", ruta1[pos+1], " a ", ruta1[pos], " tiempo de recorrido incluye visita: ", tiempoRuta1)
+    for k in range (pos,1,-1):
+            nodo = gr.getEdge(cont['connections'], ruta1[k], ruta1[k-1])
+            peso=nodo['weight']
+            tiempoRuta1= tiempoRuta1+ peso +10
+            print ("Sale de: ", ruta1[k], " a ", ruta1[k-1], " tiempo de recorrido incluye visita: ", round(tiempoRuta1,0))
+  
+    nodo = gr.getEdge(cont['connections'], ruta1[1], ruta1[0])
+    peso=nodo['weight']
+    tiempoRuta1= tiempoRuta1+ peso +10
+    print ("Sale de: ", ruta1[1], " a ", ruta1[0], " tiempo de recorrido incluye visita: ", round(tiempoRuta1,0))
+
+
+    """ 
+    #De aqui en adelante Ruta 2
+    stackTamY=stack.size(dfsAnsPathVery)
+    ruta2=lt.newList()
+
+    for i in range (0,stackTam):
+        punto=stack.pop(dfsAnsPathVerY)
+        # print (punto)
+        ruta2[i]=punto
+
+    tiempoRuta2=0   
+    #print ("Punto 1: ", ruta1[0], " y Punto 2: ", ruta1[1])
+    #print (stackTam)
+    print("")
+    print ("Ruta lineal")
+    print("")
+    for i in range (0,stackTamY-1):
+        nodo = gr.getEdge(cont['connections'], ruta2[i], ruta2[i+1])
+        tiempoRuta2= tiempoRuta2+ nodo['weight'] +10
+        print ("Sale de: ", ruta2[i], " a ", ruta2[i+1], " tiempo de recorrido incluye visita: ", round(tiempoRuta2,0))
+    print("")
+    print ("Ruta Circular")
+    print("")
+    tiempoRuta2=0
+    pos=0
+    peso=0
+    i=0
+    j=0
+    for i in range (0,stackTamY-1):
+        if  (tiempoRuta2<=(tiempoDisponible/3)):
+            nodo = gr.getEdge(cont['connections'], ruta2[i], ruta2[i+1])
+            tiempoRuta2= tiempoRuta2+ nodo['weight'] +10
+            peso=nodo['weight']
+            print ("Sale de: ", ruta2[i], " a ", ruta2[i+1], " tiempo de recorrido incluye visita: ", round(tiempoRuta2,0))
+            pos=i
+            #print ("i: ",i, " pos: ", pos)
+        else:    
+            i=stackTamY-1
+
+    #print ("Posicion: ", pos)
+    #nodo = gr.getEdge(cont['connections'], ruta1[pos+1], ruta1[pos])
+    tiempoRuta2= tiempoRuta2+ peso +10
+    print ("Sale de: ", ruta2[pos+1], " a ", ruta2[pos], " tiempo de recorrido incluye visita: ", tiempoRuta2)
+    for k in range (pos,1,-1):
+            nodo = gr.getEdge(cont['connections'], ruta2[k], ruta2[k-1])
+            peso=nodo['weight']
+            tiempoRuta2= tiempoRuta2+ peso +10
+            print ("Sale de: ", ruta2[k], " a ", ruta2[k-1], " tiempo de recorrido incluye visita: ", round(tiempoRuta2,0))
+
+    nodo = gr.getEdge(cont['connections'], ruta2[1], ruta2[0])
+    peso=nodo['weight']
+    tiempoRuta2= tiempoRuta2+ peso +10
+    print ("Sale de: ", ruta2[1], " a ", ruta2[0], " tiempo de recorrido incluye visita: ", round(tiempoRuta2,0))
+
+    """
     
 
 def optionFive():
