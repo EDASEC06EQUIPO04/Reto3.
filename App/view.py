@@ -225,62 +225,6 @@ def optionFour():
     print ("Sale de: ", ruta1[1], " a ", ruta1[0], " tiempo de recorrido incluye visita: ", round(tiempoRuta1,0))
 
 
-    """ 
-    #De aqui en adelante Ruta 2
-    stackTamY=stack.size(dfsAnsPathVery)
-    ruta2=lt.newList()
-
-    for i in range (0,stackTam):
-        punto=stack.pop(dfsAnsPathVerY)
-        # print (punto)
-        ruta2[i]=punto
-
-    tiempoRuta2=0   
-    #print ("Punto 1: ", ruta1[0], " y Punto 2: ", ruta1[1])
-    #print (stackTam)
-    print("")
-    print ("Ruta lineal")
-    print("")
-    for i in range (0,stackTamY-1):
-        nodo = gr.getEdge(cont['connections'], ruta2[i], ruta2[i+1])
-        tiempoRuta2= tiempoRuta2+ nodo['weight'] +10
-        print ("Sale de: ", ruta2[i], " a ", ruta2[i+1], " tiempo de recorrido incluye visita: ", round(tiempoRuta2,0))
-    print("")
-    print ("Ruta Circular")
-    print("")
-    tiempoRuta2=0
-    pos=0
-    peso=0
-    i=0
-    j=0
-    for i in range (0,stackTamY-1):
-        if  (tiempoRuta2<=(tiempoDisponible/3)):
-            nodo = gr.getEdge(cont['connections'], ruta2[i], ruta2[i+1])
-            tiempoRuta2= tiempoRuta2+ nodo['weight'] +10
-            peso=nodo['weight']
-            print ("Sale de: ", ruta2[i], " a ", ruta2[i+1], " tiempo de recorrido incluye visita: ", round(tiempoRuta2,0))
-            pos=i
-            #print ("i: ",i, " pos: ", pos)
-        else:    
-            i=stackTamY-1
-
-    #print ("Posicion: ", pos)
-    #nodo = gr.getEdge(cont['connections'], ruta1[pos+1], ruta1[pos])
-    tiempoRuta2= tiempoRuta2+ peso +10
-    print ("Sale de: ", ruta2[pos+1], " a ", ruta2[pos], " tiempo de recorrido incluye visita: ", tiempoRuta2)
-    for k in range (pos,1,-1):
-            nodo = gr.getEdge(cont['connections'], ruta2[k], ruta2[k-1])
-            peso=nodo['weight']
-            tiempoRuta2= tiempoRuta2+ peso +10
-            print ("Sale de: ", ruta2[k], " a ", ruta2[k-1], " tiempo de recorrido incluye visita: ", round(tiempoRuta2,0))
-
-    nodo = gr.getEdge(cont['connections'], ruta2[1], ruta2[0])
-    peso=nodo['weight']
-    tiempoRuta2= tiempoRuta2+ peso +10
-    print ("Sale de: ", ruta2[1], " a ", ruta2[0], " tiempo de recorrido incluye visita: ", round(tiempoRuta2,0))
-
-    """
-
 def optionFive():
 
     id_mayores_salida=[0,0,0]
@@ -380,23 +324,6 @@ def optionFive():
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #input:tiempo max resistencia (minutos)
 #input: id estacion inicial
 #output:rutas desde estacion salida
@@ -412,51 +339,45 @@ def optionSix():
     #initialStation=input("Inserte el punto de partida Station ID, Ejemplo 72, 79, 82, 83, 119, 120: " )
 
 
-    tiempoDisponible =int(120)
+    tiempoDisponible =int(200)
     initialStation=str(72)
-
 
     #controller.minimumCostPaths(cont, initialStation)
     scc3=controller.connectedwithID_1(cont,initialStation)
     contador=0
     listaReverse= lt.newList()
     listaReverse=scc3['reversePost']
-    print (listaReverse)
     dfsAns=dfs.DepthFirstSearch(cont['connections'], initialStation)
-    
-
-
     j=0
     listaDSF= lt.newList()
     tam=len(listaReverse)
     verX=listaReverse[tam-6]
     verY=listaReverse[0]
     dfsAnsPathVerX=dfs.pathTo(dfsAns, verX)
-    print (dfsAnsPathVerX)    
-    print (" ")
-    print ("path desde ", verX, " a ",  initialStation)
+
     dfsAnsPathVerY=dfs.pathTo(dfsAns, verY)
-    print (dfsAnsPathVerY)    
-    print (" ")
-    print ("path desde ", verY, " a ",  initialStation)
     stackTam=stack.size(dfsAnsPathVerX)
-    ruta1=lt.newList()
+    ruta=lt.newList()
     for i in range (0,stackTam):
         punto=stack.pop(dfsAnsPathVerX)
-        ruta1[i]=punto
+        ruta[i]=punto
     
-    tiempoRuta1=0   
-    print("")
-    print ("Ruta lineal")
-    print("")
+    tiempoRuta=0   
+
+    tiempoResistencia = tiempoDisponible
+    duraciontotal =0
     for i in range (0,stackTam-1):
-        nodo = gr.getEdge(cont['connections'], ruta1[i], ruta1[i+1])
-        tiempoRuta1= tiempoRuta1+ nodo['weight'] +10
-        print ("Sale de: ", ruta1[i], " a ", ruta1[i+1], " tiempo de resistencia: ", round(tiempoRuta1,0))
+        nodo = gr.getEdge(cont['connections'], ruta[i], ruta[i+1])
+        duraciontotal= duraciontotal+ nodo['weight']
+        
+        if tiempoRuta< tiempoResistencia:
+            print ("Start: ", ruta[i], " end ", ruta[i+1], " tiempo de resistencia: ", round(tiempoRuta,0))
+            estacionfinal= ruta[i]
+            tiempoRuta= tiempoRuta+ nodo['weight']
 
 
-
-
+    print("tiempo total de la ruta:  ", tiempoRuta)
+    print ("estacion final:  ", estacionfinal)
 
 def optionSeven():
     pass
