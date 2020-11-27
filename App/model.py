@@ -133,6 +133,39 @@ def addStopConnection(analyzer, lastservice, service, aux, dic_edades, edad):
         error.reraise(exp, 'model:addStopConnection')
 
 
+def addStopConnection(analyzer, lastservice, service, aux, dic_edades, edad):
+    """
+    Adiciona las estaciones al grafo como vertices y arcos entre las
+    estaciones adyacentes.
+    Los vertices tienen por nombre el identificador de la estacion
+    seguido de la ruta que sirve.  Por ejemplo:
+    75009-10
+    Si la estacion sirve otra ruta, se tiene: 75009-101
+    """
+    try:
+        origin = formatVertex(service)
+        destination = formatVertey(lastservice)
+        
+        #Req 5 (Guardar en un dict ID: Edades)
+
+        if origin not in dic_edades:
+            dic_edades[origin]=[[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0] , [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]]
+            dic_edades[origin][0][edad]=1
+        else: 
+            dic_edades[origin][0][edad]+=1
+
+
+        if destination not in dic_edades:
+            dic_edades[destination]=[[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0] , [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]]
+            dic_edades[destination][1][edad]=1
+        else: 
+            dic_edades[destination][1][edad]+=1
+
+        return analyzer
+    except Exception as exp:
+        error.reraise(exp, 'model:addStopConnection_REQ5')
+
+
 def addStop(analyzer, stopid):
     """
     Adiciona una estación como un vertice del grafo

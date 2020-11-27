@@ -292,18 +292,48 @@ def optionFive():
     print("El Id del top de estaciones menos utilizadas (consecutivamente) son: ", id_menores, ", Los respectivos valores de cada uno (consecutivamente) son: ", menores)
     
 
-def optionSix():
+def optionSix(edad_min,edad_max):
+
     
-    r=[]
-    total_esta=0
+    r_inicio={}
+    r_final={}
+    
+    inicial=""
+    final=""
+
+    i=0
+    j=0
+
     for estacion in edades:
-        total_esta += 1
         y=0
-        for x in range(20,70):
-            y+=edades[estacion][0][x]
-            
-        r.append(y)
-    print(r)
+        for x in range(edad_min, edad_max):
+
+            y+=edades[estacion][0][x]   
+        r_inicio[estacion]=y
+    
+    for estacion in edades:
+        z=0
+        for x in range(edad_min, edad_max):
+            z += edades[estacion][1][x]
+
+        r_final[estacion]=y
+
+
+    for id_est in r_inicio:
+
+        if r_inicio[id_est] > i:
+            inicial=id_est
+            i=r_inicio[id_est]
+
+    for id_est in r_final:
+
+        if r_inicio[id_est] > j:
+            final=id_est
+            j=r_inicio[id_est]
+
+
+    print("La estacion en donde las personas de su rango de edad inician mas viajes es: ", inicial)
+    print("La estacion en donde las personas de su rango de edad terminan mas viajes es: ", final)
 
 
 def optionSeven():
@@ -323,6 +353,46 @@ def optionTen():
 """
 Menu principal
 """
+def establecer_rango_de_edad():
+
+    print("\n")
+    print("****************************************************")
+    print("¿En que rango de edad se encuentra usted?")
+    print("[ 1 ] 0-10")
+    print("[ 2 ] 11-20")
+    print("[ 3 ] 21-30")
+    print("[ 4 ] 31-40")
+    print("[ 5 ] 41-50")
+    print("[ 6 ] 51-60")
+    print("[ 7 ] +60")
+    print("****************************************************")
+
+    rango_edad=input("escriba su respuesta: ")
+
+    if rango_edad == 1:
+        optionSix(0,10)
+
+    elif rango_edad == 2:
+        optionSix(11,20)
+
+    elif rango_edad == 3:
+        optionSix(21,30)
+
+    elif rango_edad == 4:
+        optionSix(31,40)
+
+    elif rango_edad == 5:
+        optionSix(41,50)
+
+    elif rango_edad == 6:
+        optionSix(51,60)
+
+    elif rango_edad == 7:
+        optionSix(61,135)
+
+
+
+
 while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n>')
@@ -353,8 +423,14 @@ while True:
         print("Tiempo de ejecución: " + str(executiontime))
 
     elif int(inputs) == 6:
+
+        establecer_rango_de_edad()
+
+        """
         executiontime = timeit.timeit(optionSix, number=1)
         print("Tiempo de ejecución: " + str(executiontime))
+        """
+
 
     elif int(inputs) == 7:
         executiontime = timeit.timeit(optionSeven, number=1)
