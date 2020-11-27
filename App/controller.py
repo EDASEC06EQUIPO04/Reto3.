@@ -58,12 +58,11 @@ def init():
 # ___________________________________________________
 
 
-def loadServices(analyzer,servicesfile):
+def loadServices(analyzer,servicesfile, aux):
     """
     Carga los datos de los archivos CSV en el modelo.
     Se crea un arco entre cada par de estaciones que
     pertenecen al mismo servicio y van en el mismo sentido.
-
     addRouteConnection crea conexiones entre diferentes rutas
     servidas en una misma estación.
     """
@@ -72,7 +71,7 @@ def loadServices(analyzer,servicesfile):
     for filename in os.listdir(cf.data_dir):
         if filename.endswith('.csv'):
             print('Cargando archivo: ' + filename)
-            loadFile(analyzer, filename)
+            loadFile(analyzer, filename, aux)
 
 
     #input_file = csv.DictReader(open(servicesfile, encoding="utf-8"), delimiter=",")
@@ -81,7 +80,7 @@ def loadServices(analyzer,servicesfile):
     return analyzer
 
 
-def loadFile(analyzer, tripfile):
+def loadFile(analyzer, tripfile, aux):
     """
     """
     tripfile = cf.data_dir + tripfile
@@ -93,18 +92,16 @@ def loadFile(analyzer, tripfile):
 
         
         if lastservice is not None:
-            """ 
+
             sameservice = lastservice['start station id'] == service['start station id'] 
             samedirection = lastservice['end station id'] == service['end station id']
-            if sameservice and samedirection:
-                model.addStopConnection(analyzer, lastservice, service)
-                i+=1
-                print (i)
-            """
-            sameservice = lastservice['start station id'] == service['start station id'] 
-            samedirection = lastservice['end station id'] == service['end station id']
-            model.addStopConnection(analyzer, lastservice, service)      
+
+
+            model.addStopConnection(analyzer, lastservice, service, aux)      
         lastservice = service
+
+
+
     #print (analyzer['connections']) 
         #origen = service['start station id'] 
         #destino = service['end station id']       
@@ -176,3 +173,45 @@ def servedRoutes(analyzer):
     """
     maxvert, maxdeg = model.servedRoutes(analyzer)
     return maxvert, maxdeg
+
+
+def pathStationTime(cont, idinicio, time):
+    return model.pathStationTime(cont, idinicio, time)
+
+
+def loadServices_REQ5(analyzer,servicesfile, aux, edades):
+
+    for filename in os.listdir(cf.data_dir):
+        if filename.endswith('.csv'):
+            print('Cargando archivo: ' + filename)
+            loadFile_REQ5(analyzer, filename, aux, edades)
+
+    return analyzer
+
+def loadFile_REQ5(analyzer, tripfile, aux, dic_edades):
+    
+    tripfile = cf.data_dir + tripfile
+    input_file = csv.DictReader(open(tripfile, encoding="utf-8"),
+                                delimiter=",")
+    lastservice = None
+    for service in input_file:
+
+        
+        if lastservice is not None:
+            """ 
+            sameservice = lastservice['start station id'] == service['start station id'] 
+            samedirection = lastservice['end station id'] == service['end station id']
+            if sameservice and samedirection:
+                model.addStopConnection(analyzer, lastservice, service)
+                i+=1
+                print (i)
+            """
+            sameservice = lastservice['start station id'] == service['start station id'] 
+            samedirection = lastservice['end station id'] == service['end station id']
+
+            edad= 2020-int(service["birth year"])
+            model.addStopConnection_REQ5(analyzer, lastservice, service, aux, dic_edades, edad)      
+        lastservice = service
+        
+    model.addRouteConnections(analyzer)
+    return analyzer

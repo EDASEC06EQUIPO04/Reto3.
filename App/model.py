@@ -45,7 +45,6 @@ de creacion y consulta sobre las estructuras de datos.
 
 def newAnalyzer():
     """ Inicializa el analizador
-
    stops: Tabla de hash para guardar los vertices del grafo
    connections: Grafo para representar las rutas entre estaciones
    components: Almacena la informacion de los componentes conectados
@@ -75,16 +74,13 @@ def newAnalyzer():
 
 # Funciones para agregar informacion al grafo
 
-def addStopConnection(analyzer, lastservice, service):
+def addStopConnection(analyzer, lastservice, service, aux):
     """
     Adiciona las estaciones al grafo como vertices y arcos entre las
     estaciones adyacentes.
-
     Los vertices tienen por nombre el identificador de la estacion
     seguido de la ruta que sirve.  Por ejemplo:
-
     75009-10
-
     Si la estacion sirve otra ruta, se tiene: 75009-101
     """
     try:
@@ -101,6 +97,20 @@ def addStopConnection(analyzer, lastservice, service):
         addConnection(analyzer, origin, destination, distance)
         #addRouteStop(analyzer, service)
         #addRouteStop(analyzer, lastservice)
+
+        if origin not in aux:
+            aux[origin]=[1,0,1]
+        else:
+            aux[origin][0]+=1
+            aux[origin][2]+=1
+        
+        if destination not in aux:
+            aux[destination]=[0,1,1]
+
+        else:
+            aux[destination][1]+=1
+            aux[destination][2]+=1
+
         return analyzer
     except Exception as exp:
         error.reraise(exp, 'model:addStopConnection')
@@ -212,7 +222,6 @@ def numSCC(analyzer):
     input ("Clic para continuar .....")
     """
     print ("Reverse: ", scc.sccCount(sc))
-
     input ("Clic para continuar .....")
     """
     return scc.connectedComponents(sc)
@@ -300,6 +309,17 @@ def servedRoutes(analyzer):
     return maxvert, maxdeg
 
 
+
+
+def pathStationTime(cont, idinicio, time):
+
+    timeformatted = time*60
+    path = djk.pathTo(analyzer['paths'], destStation)
+
+    service['tripduration']
+    return path
+
+
 # ==============================
 # Funciones Helper
 # ==============================
@@ -365,3 +385,39 @@ def compareroutes(route1, route2):
         return 1
     else:
         return -1
+
+
+
+
+def addStopConnection_REQ5(analyzer, lastservice, service, aux, dic_edades, edad):
+    """
+    Adiciona las estaciones al grafo como vertices y arcos entre las
+    estaciones adyacentes.
+    Los vertices tienen por nombre el identificador de la estacion
+    seguido de la ruta que sirve.  Por ejemplo:
+    75009-10
+    Si la estacion sirve otra ruta, se tiene: 75009-101
+    """
+    try:
+        origin = formatVertex(service)
+        destination = formatVertey(lastservice)
+        
+        #Req 5 (Guardar en un dict ID: Edades)
+
+        if origin not in dic_edades:
+            dic_edades[origin]=[[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0] , [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]]
+            dic_edades[origin][0][edad]=1
+        else: 
+            dic_edades[origin][0][edad]+=1
+
+
+
+        if destination not in dic_edades:
+            dic_edades[destination]=[[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0] , [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]]
+            dic_edades[destination][1][edad]=1
+        else: 
+            dic_edades[destination][1][edad]+=1
+
+        return analyzer
+    except Exception as exp:
+        error.reraise(exp, 'model:addStopConnection_REQ5')
