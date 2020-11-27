@@ -86,9 +86,6 @@ def KosarajuSCC(graph):
         for i in range (0,catEstaciones,1):
             print (lt.getElement(grevrevpost,i))
             scc['reversePost'][i]= lt.getElement(grevrevpost,i)
-        print ("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-        input("Tamano del stack par recorrerlo, impreso desde SCC.PY")
-        print ("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
 
         
         scc['components'] = 0
