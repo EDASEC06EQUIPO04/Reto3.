@@ -58,12 +58,11 @@ def init():
 # ___________________________________________________
 
 
-def loadServices(analyzer):
+def loadServices(analyzer,servicesfile, aux):
     """
     Carga los datos de los archivos CSV en el modelo.
     Se crea un arco entre cada par de estaciones que
     pertenecen al mismo servicio y van en el mismo sentido.
-
     addRouteConnection crea conexiones entre diferentes rutas
     servidas en una misma estación.
     """
@@ -72,7 +71,7 @@ def loadServices(analyzer):
     for filename in os.listdir(cf.data_dir):
         if filename.endswith('.csv'):
             print('Cargando archivo: ' + filename)
-            loadFile(analyzer, filename)
+            loadFile(analyzer, filename, aux)
 
 
     #input_file = csv.DictReader(open(servicesfile, encoding="utf-8"), delimiter=",")
@@ -81,20 +80,33 @@ def loadServices(analyzer):
     return analyzer
 
 
-def loadFile(analyzer, tripfile):
+def loadFile(analyzer, tripfile, aux):
     """
     """
     tripfile = cf.data_dir + tripfile
     input_file = csv.DictReader(open(tripfile, encoding="utf-8"),
                                 delimiter=",")
     lastservice = None
+    i=0
     for service in input_file:
+
+        
         if lastservice is not None:
+
             sameservice = lastservice['start station id'] == service['start station id'] 
             samedirection = lastservice['end station id'] == service['end station id']
-            if sameservice and samedirection:
-                model.addStopConnection(analyzer, lastservice, service)
+
+
+            model.addStopConnection(analyzer, lastservice, service, aux)      
         lastservice = service
+
+
+
+    #print (analyzer['connections']) 
+        #origen = service['start station id'] 
+        #destino = service['end station id']       
+        #model.addStopConnection(analyzer, origen , destino)
+
     model.addRouteConnections(analyzer)
     return analyzer
 
@@ -130,6 +142,9 @@ def connectedComponents(analyzer):
 def connectedwithID(cont, id1,id2):
     return model.connectedwithID(cont, id1,id2)
 
+def connectedwithID_1(cont, id1):
+    return model.connectedwithID_1(cont, id1)
+
 def minimumCostPaths(analyzer, initialStation):
     """
     Calcula todos los caminos de costo minimo de initialStation a todas
@@ -158,3 +173,138 @@ def servedRoutes(analyzer):
     """
     maxvert, maxdeg = model.servedRoutes(analyzer)
     return maxvert, maxdeg
+
+
+def pathStationTime(cont, idinicio, time):
+    return model.pathStationTime(cont, idinicio, time)
+
+
+def loadServices_REQ5(analyzer,servicesfile, aux, edades):
+
+    for filename in os.listdir(cf.data_dir):
+        if filename.endswith('.csv'):
+            print('Cargando archivo: ' + filename)
+            loadFile_REQ5(analyzer, filename, aux, edades)
+
+    return analyzer
+
+def loadFile_REQ5(analyzer, tripfile, aux, dic_edades):
+    
+    tripfile = cf.data_dir + tripfile
+    input_file = csv.DictReader(open(tripfile, encoding="utf-8"),
+                                delimiter=",")
+    lastservice = None
+    for service in input_file:
+
+        
+        if lastservice is not None:
+            """ 
+            sameservice = lastservice['start station id'] == service['start station id'] 
+            samedirection = lastservice['end station id'] == service['end station id']
+            if sameservice and samedirection:
+                model.addStopConnection(analyzer, lastservice, service)
+                i+=1
+                print (i)
+            """
+            sameservice = lastservice['start station id'] == service['start station id'] 
+            samedirection = lastservice['end station id'] == service['end station id']
+
+            edad= 2020-int(service["birth year"])
+            model.addStopConnection_REQ5(analyzer, lastservice, service, aux, dic_edades, edad)      
+        lastservice = service
+        
+    model.addRouteConnections(analyzer)
+    return analyzer
+
+
+def loadServices_REQ6(analyzer,servicesfile, aux, lats):
+
+    for filename in os.listdir(cf.data_dir):
+        if filename.endswith('.csv'):
+            print('Cargando archivo: ' + filename)
+            REQ6(analyzer, filename, aux, lats)
+
+    return analyzer
+
+
+def REQ6 (analyzer, tripfile, aux, dic_latitudes):
+    tripfile = cf.data_dir + tripfile
+    input_file = csv.DictReader(open(tripfile, encoding="utf-8"),
+                                delimiter=",")
+    lastservice = None
+    for service in input_file:
+
+        
+        if lastservice is not None:
+            sameservice = lastservice['start station id'] == service['start station id'] 
+            samedirection = lastservice['end station id'] == service['end station id']
+
+            latitud= service["start station latitude"]
+            print (latitud)
+            model.addStopConnection_REQ6(analyzer, lastservice, service, aux, dic_latitudes, latitud)      
+        lastservice = service
+        
+    model.addRouteConnections(analyzer)
+    return analyzer
+
+
+def compararlat2(analyzer, tripfile, latconsultadaf):
+    tripfile = cf.data_dir + tripfile
+    input_file = csv.DictReader(open(tripfile, encoding="utf-8"),
+                                delimiter=",")
+
+    latitud = float(latconsultadaf)
+    diferencia1 = float(1000.5)
+    latfinal = float(0)
+    idinicio = 0
+    tiempoviaje=0
+    for service in input_file:
+        comparalatitud1= float(service["start station latitude"])
+        diff2= latitud-comparalatitud1
+        if diff2<diferencia1:
+            diferencia1=diff2
+            latfinal= comparalatitud1
+            idinicio = service['start station id']
+            triptime = int(service['tripduration'])
+    triptime2=triptime/6
+
+
+    
+    print("La latidud final mas proxima a la ingresada es: " , latfinal  )
+    print("corresponde a la estacion final con id:  ", idinicio )
+    print("el tiempo de viaje es:" , triptime2, "minutos ")
+
+
+
+
+
+def compararlat1(analyzer, tripfile, latconsultadaf):
+    tripfile = cf.data_dir + tripfile
+    input_file = csv.DictReader(open(tripfile, encoding="utf-8"),
+                                delimiter=",")
+
+    latitud = float(latconsultadaf)
+    diferencia1 = float(1000.5)
+    latfinal = float(0)
+    idinicio = 0
+    
+    for service in input_file:
+        comparalatitud1= float(service["start station latitude"])
+        diff2= comparalatitud1-latitud
+        if diff2<diferencia1:
+            diferencia1=diff2
+            latfinal= comparalatitud1
+            idinicio = service['start station id']
+    print("La latidud inicial mas proxima a la ingresada es: " , latfinal  )
+    print("corresponde a la estacion inicial con id:  ", idinicio )    
+
+
+def floattoint (flchange):
+    process= str(flchange)
+    while len(process)<20:
+        process= process+"0"
+    prefinal= process.replace('.','')
+    final = prefinal.replace('-','')
+    return int(final)
+    
+
