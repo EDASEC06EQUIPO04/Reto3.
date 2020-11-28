@@ -215,3 +215,96 @@ def loadFile_REQ5(analyzer, tripfile, aux, dic_edades):
         
     model.addRouteConnections(analyzer)
     return analyzer
+
+
+def loadServices_REQ6(analyzer,servicesfile, aux, lats):
+
+    for filename in os.listdir(cf.data_dir):
+        if filename.endswith('.csv'):
+            print('Cargando archivo: ' + filename)
+            REQ6(analyzer, filename, aux, lats)
+
+    return analyzer
+
+
+def REQ6 (analyzer, tripfile, aux, dic_latitudes):
+    tripfile = cf.data_dir + tripfile
+    input_file = csv.DictReader(open(tripfile, encoding="utf-8"),
+                                delimiter=",")
+    lastservice = None
+    for service in input_file:
+
+        
+        if lastservice is not None:
+            sameservice = lastservice['start station id'] == service['start station id'] 
+            samedirection = lastservice['end station id'] == service['end station id']
+
+            latitud= service["start station latitude"]
+            print (latitud)
+            model.addStopConnection_REQ6(analyzer, lastservice, service, aux, dic_latitudes, latitud)      
+        lastservice = service
+        
+    model.addRouteConnections(analyzer)
+    return analyzer
+
+
+def compararlat2(analyzer, tripfile, latconsultadaf):
+    tripfile = cf.data_dir + tripfile
+    input_file = csv.DictReader(open(tripfile, encoding="utf-8"),
+                                delimiter=",")
+
+    latitud = float(latconsultadaf)
+    diferencia1 = float(1000.5)
+    latfinal = float(0)
+    idinicio = 0
+    tiempoviaje=0
+    for service in input_file:
+        comparalatitud1= float(service["start station latitude"])
+        diff2= latitud-comparalatitud1
+        if diff2<diferencia1:
+            diferencia1=diff2
+            latfinal= comparalatitud1
+            idinicio = service['start station id']
+            triptime = int(service['tripduration'])
+    triptime2=triptime/6
+
+
+    
+    print("La latidud final mas proxima a la ingresada es: " , latfinal  )
+    print("corresponde a la estacion final con id:  ", idinicio )
+    print("el tiempo de viaje es:" , triptime2, "minutos ")
+
+
+
+
+
+def compararlat1(analyzer, tripfile, latconsultadaf):
+    tripfile = cf.data_dir + tripfile
+    input_file = csv.DictReader(open(tripfile, encoding="utf-8"),
+                                delimiter=",")
+
+    latitud = float(latconsultadaf)
+    diferencia1 = float(1000.5)
+    latfinal = float(0)
+    idinicio = 0
+    
+    for service in input_file:
+        comparalatitud1= float(service["start station latitude"])
+        diff2= comparalatitud1-latitud
+        if diff2<diferencia1:
+            diferencia1=diff2
+            latfinal= comparalatitud1
+            idinicio = service['start station id']
+    print("La latidud inicial mas proxima a la ingresada es: " , latfinal  )
+    print("corresponde a la estacion inicial con id:  ", idinicio )    
+
+
+def floattoint (flchange):
+    process= str(flchange)
+    while len(process)<20:
+        process= process+"0"
+    prefinal= process.replace('.','')
+    final = prefinal.replace('-','')
+    return int(final)
+    
+

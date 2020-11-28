@@ -335,12 +335,12 @@ def optionSix():
     #time = input("ingrese tiempo maximo de resistencia")
     #unformattedtime =int(5)
 
-    #tiempoDisponible=int(input(" Tiempo de resistencia " ))
-    #initialStation=input("Inserte el punto de partida Station ID, Ejemplo 72, 79, 82, 83, 119, 120: " )
+    tiempoDisponible=int(input(" Tiempo de resistencia " ))
+    initialStation=input("Inserte el punto de partida Station ID, Ejemplo 72, 79, 82, 83, 119, 120: " )
 
 
-    tiempoDisponible =int(200)
-    initialStation=str(72)
+    #tiempoDisponible =int(200)
+    #initialStation=str(72)
 
     #controller.minimumCostPaths(cont, initialStation)
     scc3=controller.connectedwithID_1(cont,initialStation)
@@ -380,7 +380,6 @@ def optionSix():
     print ("estacion final:  ", estacionfinal)
 
 def optionSeven():
-    pass
 
 
     controller.loadServices_REQ5(cont,servicefile,aux, edades)
@@ -488,7 +487,26 @@ def optionSeven():
 
 
 def optionEight():
-    input("Ingrese latitud")
+
+
+    latconsultada1 = input("Ingrese latitud inicial")
+    latconsultada2 = input("Ingrese latitud de destino")
+
+    controller.compararlat1(cont, servicefile,latconsultada1)
+    controller.compararlat2(cont, servicefile,latconsultada2)
+    
+    #Desarrollo del requerimiento
+
+
+
+"""
+    camino=controller.minimumCostPaths(cont, inicial)
+    camino_final=controller.minimumCostPath(camino, final)
+    print("El camino mas rapido entre la estacion ", inicial,"Y la estacion ", final, "es: ")
+    print(camino_final)
+"""
+
+
 
 
 
@@ -496,7 +514,28 @@ def optionNine():
     pass
 
 def optionTen():
-    pass
+    IdBicicleta=int(input(" Digite el ID de la Bike que quiere consultar, Ejeplo: 32536, 14884, 14919, 14556 ? " ))
+    paradas=cont['stops']
+    idBicisValues=m.valueSet(paradas)
+    #print (idBicisValues)
+    #print (idBicisValues)
+    idBicisKeys=m.keySet(paradas)
+    #print (idBicisKeys)
+    tam=m.size(paradas)
+    listaBici=lt.newList('ARRAY_LIST')
+    print ("Voy a buscar", IdBicicleta )
+    #print (paradas)
+    #input("")
+    i=0
+    for k,v in paradas.items():
+        #print (k,v)
+        if v==IdBicicleta:
+           listaBici[i]= k
+           i=i+1
+    print ("Esta bicicleta visito las siguientes estaciones")
+    print (listaBici)
+    #input("")
+
 
 
 
@@ -543,6 +582,7 @@ while True:
         print("Tiempo de ejecución: " + str(executiontime))
     
     elif int(inputs) == 8:
+        lats = {}
         executiontime = timeit.timeit(optionEight, number=1)
         print("Tiempo de ejecución: " + str(executiontime))
     
