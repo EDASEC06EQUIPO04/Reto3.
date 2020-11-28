@@ -300,13 +300,35 @@ def optionSeven():
     pass
 
 def optionEight():
+      
+    
     pass
 
 def optionNine():
     pass
 
 def optionTen():
-    pass
+    IdBicicleta=int(input(" Digite el ID de la Bike que quiere consultar, Ejeplo: 32536, 14884, 14919, 14556 ? " ))
+    paradas=cont['stops']
+    idBicisValues=m.valueSet(paradas)
+    #print (idBicisValues)
+    idBicisKeys=m.keySet(paradas)
+    #print (idBicisKeys)
+    tam=m.size(paradas)
+    listaBici=lt.newList('ARRAY_LIST')
+    print ("Voy a buscar", IdBicicleta )
+    #print (paradas)
+    #input("")
+    i=0
+    for k,v in paradas.items():
+        print (k,v)
+        if v==IdBicicleta:
+           listaBici[i]= k
+           i=i+1
+    print ("Esta bicicleta visito las siguientes estaciones")
+     
+    print (listaBici)
+    #input("")
 
 
 

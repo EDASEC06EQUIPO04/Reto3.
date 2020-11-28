@@ -32,6 +32,7 @@ from DISClib.Algorithms.Graphs import scc
 from DISClib.Algorithms.Graphs import dijsktra as djk
 from DISClib.Utils import error as error
 from DISClib.DataStructures import edge as e
+from DISClib.DataStructures import mapentry as me
 assert config
 """
 En este archivo definimos los TADs que vamos a usar y las operaciones
@@ -73,6 +74,8 @@ def newAnalyzer():
         error.reraise(exp, 'model:newAnalyzer')
 
 
+
+
 # Funciones para agregar informacion al grafo
 
 def addStopConnection(analyzer, lastservice, service):
@@ -99,7 +102,8 @@ def addStopConnection(analyzer, lastservice, service):
         addStop(analyzer, destination)
         #if e.compareedges(str(origin), str(destination))!=True:
         addConnection(analyzer, origin, destination, distance)
-        #addRouteStop(analyzer, service)
+        #Ajuste del codigo para el Requerimiento 8
+        addRouteStop(analyzer, service)
         #addRouteStop(analyzer, lastservice)
         return analyzer
     except Exception as exp:
@@ -121,20 +125,22 @@ def addStop(analyzer, stopid):
 
 def addRouteStop(analyzer, service):
     """
-    Agrega a una estacion, una ruta que es servida en ese paradero
+    Agrega a una estacion, los IdBikes que estuvieron los visitaron
     """
     entry = m.get(analyzer['stops'], service['end station id'])
+    lstroutes = lt.newList(cmpfunction=compareroutes)
     if entry is None:
         lstroutes = lt.newList(cmpfunction=compareroutes)
-        lt.addLast(lstroutes, service['start station id'])
+        lt.addLast(lstroutes, service['bikeid'])
         m.put(analyzer['stops'], service['end station id'], lstroutes)
     else:
-        lstroutes = entry['value']
-        info = service['start station id']
+        #lstroutes = entry['value']
+        info = service['bikeid']
         if not lt.isPresent(lstroutes, info):
             lt.addLast(lstroutes, info)
-    return analyzer
+            m.put(analyzer['stops'], service['end station id'], lstroutes)
 
+    return analyzer
 
 def addRouteConnections(analyzer):
     """
