@@ -336,12 +336,11 @@ def optionSix():
     #unformattedtime =int(5)
 
     tiempoDisponible=int(input(" Tiempo de resistencia " ))
-    initialStation=input("Inserte el punto de partida Station ID, Ejemplo 72, 79, 82, 83, 119, 120: " )
+    initialStation=input("Inserte el punto de partida Station ID: " )
 
 
     #tiempoDisponible =int(200)
     #initialStation=str(72)
-
     #controller.minimumCostPaths(cont, initialStation)
     scc3=controller.connectedwithID_1(cont,initialStation)
     contador=0
@@ -370,7 +369,7 @@ def optionSix():
         nodo = gr.getEdge(cont['connections'], ruta[i], ruta[i+1])
         duraciontotal= duraciontotal+ nodo['weight']
         
-        if tiempoRuta< tiempoResistencia:
+        if tiempoRuta<= tiempoResistencia:
             print ("Start: ", ruta[i], " end ", ruta[i+1], " tiempo de resistencia: ", round(tiempoRuta,0))
             estacionfinal= ruta[i]
             tiempoRuta= tiempoRuta+ nodo['weight']
